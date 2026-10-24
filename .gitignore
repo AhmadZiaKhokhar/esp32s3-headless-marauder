@@ -1,0 +1,16 @@
+# Build Artifacts & Binaries
+**/build/
+*.bin
+*.elf
+*.hex
+*.map
+*.o
+*.a
+
+# Temporary Sync Directories & Tools
+upstream_check_temp/
+.cache/
+.DS_Store
+
+# Version Snapshots / Checkpoints
+**/checkpoints/

@@ -1,0 +1,107 @@
+📘 End-to-End Guide: Modifying & Compiling Marauder UI Offline
+🏗️ Architecture Overview
+Source Directory: marauder-ui-pro/ (Vue 3 + Vite project where you write custom code).
+
+Bundler Plugin: vite-plugin-singlefile (Inlines all JavaScript, CSS, and icons into a single standalone .html file).
+
+Offline Output Directory: marauder-ui-pro-offline/ (Contains the compiled index.html file that can be double-clicked to run directly on any computer without local web servers or internet access).
+
+Phase 1: Making Custom UI Changes
+Navigate to your project source directory:
+
+Bash
+cd /media/mydata/marauder-final-with-androide-app-and-web-server-UI/marauder-ui-pro
+Open the source code in your editor (e.g., VS Code or terminal editor).
+
+Core directories for customization:
+
+src/components/: Modify UI components (buttons, dark mode, attack menus, network scanners).
+
+src/App.vue: Main application layout, sidebar navigation, and header title.
+
+src/assets/: Replace or add logos, icons, and theme styles.
+
+Phase 2: Testing Your Changes Live (Optional Development Mode)
+To preview your modifications live with hot-reload while editing:
+
+Bash
+cd /media/mydata/marauder-final-with-androide-app-and-web-server-UI/marauder-ui-pro
+npm run dev
+Open the local URL displayed in the terminal (usually http://localhost:5173).
+
+Press Ctrl + C in the terminal when done testing.
+
+Phase 3: One-Time Build Configuration Setup
+Ensure vite.config.js is configured with viteSingleFile so that assets are merged into a single bundle:
+
+Bash
+cd /media/mydata/marauder-final-with-androide-app-and-web-server-UI/marauder-ui-pro
+
+cat << 'EOF' > vite.config.js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { viteSingleFile } from 'vite-plugin-singlefile'
+
+export default defineConfig({
+  plugins: [vue(), viteSingleFile()],
+})
+EOF
+Phase 4: Compiling for Offline Deployment
+Whenever you finish making UI modifications, compile the new code into the standalone offline output folder:
+
+Bash
+# 1. Navigate to the UI project directory
+cd /media/mydata/marauder-final-with-androide-app-and-web-server-UI/marauder-ui-pro
+
+# 2. Compile production bundle
+npm run build
+
+# 3. Refresh the offline distribution folder
+rm -rf ../marauder-ui-pro-offline
+mkdir -p ../marauder-ui-pro-offline
+cp -r dist/* ../marauder-ui-pro-offline/
+Phase 5: Running the UI Completely Offline
+Connect your ESP32-S3 Marauder via USB.
+
+Open your file manager and navigate to marauder-ui-pro-offline/.
+
+Double-click index.html in Google Chrome or Microsoft Edge.
+
+Click Connect, select your board's serial port (e.g., /dev/ttyUSB0 or COMx), and your updated custom dashboard will load and operate completely offline.
+
+💾 Save the Guide Directly to Your Marauder Folder
+Run this command in your terminal to save a copy of this guide inside your master backup folder:
+
+Bash
+cat << 'EOF' > /media/mydata/marauder-final-with-androide-app-and-web-server-UI/GUIDE_MODIFY_UI_OFFLINE.md
+# Marauder Web UI Pro - Offline Modification & Build Guide
+
+## 📁 Workspace Paths
+- **Master Folder:** `/media/mydata/marauder-final-with-androide-app-and-web-server-UI/`
+- **Source Code:** `marauder-ui-pro/`
+- **Compiled Offline Output:** `marauder-ui-pro-offline/index.html`
+
+---
+
+## 🛠️ Step-by-Step Workflow
+
+### 1. Edit Source Code
+Modify your UI files inside `/marauder-ui-pro/src/`.
+
+### 2. Live Preview (Optional)
+```bash
+cd /media/mydata/marauder-final-with-androide-app-and-web-server-UI/marauder-ui-pro
+npm run dev
+3. Compile Single-File Offline Build
+Bash
+cd /media/mydata/marauder-final-with-androide-app-and-web-server-UI/marauder-ui-pro
+npm run build
+rm -rf ../marauder-ui-pro-offline
+mkdir -p ../marauder-ui-pro-offline
+cp -r dist/* ../marauder-ui-pro-offline/
+4. Run Offline
+Double-click marauder-ui-pro-offline/index.html in Chrome or Edge and click Connect.
+EOF
+
+
+Run that command block to lock in `GUIDE_MODIFY_UI_OFFLINE.md`. Let me know once it's created and we can move to the next step!
