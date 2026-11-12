@@ -138,7 +138,7 @@ bool SDInterface::initSD() {
     pinMode(SD_CS, OUTPUT);
 
     delay(10);
-    #if (defined(MARAUDER_M5STICKC)) || (defined(HAS_CYD_TOUCH)) || (defined(MARAUDER_CARDPUTER)) || (defined(MARAUDER_CARDPUTER_ADV))
+    #if (defined(MARAUDER_M5STICKC)) || (defined(HAS_CYD_TOUCH)) || (defined(MARAUDER_CARDPUTER)) || (defined(MARAUDER_CARDPUTER_ADV)) || (defined(HAS_SEPARATE_SD))
       /* Set up SPI SD Card using external pin header
       StickCPlus Header - SPI SD Card Reader
                   3v3   -   3v3
@@ -155,14 +155,16 @@ bool SDInterface::initSD() {
       #else
         enum { SPI_SCK = 0, SPI_MISO = 36, SPI_MOSI = 26 };
       #endif
-      #if !defined(MARAUDER_CARDPUTER) && !defined(MARAUDER_CARDPUTER_ADV)
+      #if defined(MARAUDER_MULTIBOARD_S3)
+        this->spiExt = &SPI;
+      #elif !defined(MARAUDER_CARDPUTER) && !defined(MARAUDER_CARDPUTER_ADV)
         this->spiExt = new SPIClass();
       #else
         this->spiExt = new SPIClass(FSPI);
       #endif
       Serial.println(F("Using external SPI configuration..."));
       this->spiExt->begin(SPI_SCK, SPI_MISO, SPI_MOSI, SD_CS);
-      if (!SD.begin(SD_CS, *(this->spiExt))) {
+      if (!SD.begin(SD_CS, *(this->spiExt), 4000000UL)) {
     #elif defined(HAS_C5_SD)
       if (!SD.begin(SD_CS, *_spi)) {
     #else

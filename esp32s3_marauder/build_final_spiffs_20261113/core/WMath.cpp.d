@@ -1,0 +1,20 @@
+/mnt/local-ai/Projects/maradur/YD_ESP32S3_Marauder/build_final_spiffs_20261113/core/WMath.cpp.o: \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/cores/esp32/WMath.cpp \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_system/include/esp_system.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_common/include/esp_err.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_common/include/esp_compiler.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_common/include/esp_attr.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_common/include/esp_bit_defs.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_common/include/esp_idf_version.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_hw_support/include/esp_mac.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_hw_support/include/esp_chip_info.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_hw_support/include/esp_random.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/cores/esp32/esp32-hal-log.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_timer/include/esp_timer.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/log/include/esp_log.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_rom/include/esp_rom_sys.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/soc/esp32s3/include/soc/reset_reasons.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_rom/include/esp32s3/rom/ets_sys.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/soc/esp32s3/include/soc/soc.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/esp_common/include/esp_assert.h \
+ /home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9/tools/sdk/esp32s3/include/log/include/esp_log_internal.h

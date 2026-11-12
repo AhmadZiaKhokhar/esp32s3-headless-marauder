@@ -101,13 +101,17 @@ CommandLine cli_obj;
   MenuFunctions menu_function_obj;
 #endif
 
+#ifdef HAS_CSI_MOTION
+  CsiMotionMonitor csi_motion_obj;
+#endif
+
 SDInterface sd_obj;
 
 #ifdef MARAUDER_M5STICKC
   AXP192 axp192_obj;
 #endif
 
-#ifdef MARAUDER_FLIPPER
+#ifdef HAS_FLIPPER_LED
   flipperLED flipper_led;
 #elif defined(XIAO_ESP32_S3)
   xiaoLED xiao_led;
@@ -378,10 +382,7 @@ void loop()
 
   
   
-  // Detect SD card
-  #if defined(HAS_SD)
-    sd_obj.main();
-  #endif
+
 
   // Save buffer to SD and/or serial
   buffer_obj.save();

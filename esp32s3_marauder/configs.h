@@ -25,7 +25,7 @@
   //#define MARAUDER_KIT
   //#define GENERIC_ESP32
   //#define MARAUDER_FLIPPER
-  //#define MARAUDER_MULTIBOARD_S3
+  #define MARAUDER_MULTIBOARD_S3
   //#define ESP32_LDDB
   //#define MARAUDER_DEV_BOARD_PRO
   //#define XIAO_ESP32_S3
@@ -527,6 +527,7 @@
     #define HAS_GPS
     #define HAS_SD
     #define USE_SD
+#define HAS_SEPARATE_SD
     //#define HAS_PSRAM
     //#define HAS_TEMP_SENSOR
     #define HAS_DIRECT_UPLOAD
@@ -2868,7 +2869,10 @@
     #endif
 
     #ifdef MARAUDER_MULTIBOARD_S3
-      #define SD_CS 10
+      #define SD_CS   10
+      #define SD_SCK  13
+      #define SD_MISO 12
+      #define SD_MOSI 11
     #endif
 
     #ifdef ESP32_LDDB

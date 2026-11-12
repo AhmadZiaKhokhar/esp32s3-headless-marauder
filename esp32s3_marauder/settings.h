@@ -9,7 +9,7 @@
 #include <FS.h>
 #include <ArduinoJson.h>
 
-#define FORMAT_SPIFFS_IF_FAILED true
+#define FORMAT_SPIFFS_IF_FAILED false
 
 #ifdef HAS_SCREEN
   #include "Display.h"

@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..,../..",
+  "compiler.optimization_flags": "-Os",
+  "customBuildProperties": "build.partitions=default_16MB,upload.maximum_size=6553600",
+  "fqbn": "esp32:esp32:esp32s3:FlashMode=dio,FlashSize=16M,PSRAM=disabled",
+  "hardwareFolders": "/home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9,/home/anonymous/.arduino15/packages/esp32/hardware/esp32/2.0.9",
+  "otherLibrariesFolders": "/home/anonymous/Arduino/libraries",
+  "sketchLocation": "/mnt/local-ai/Projects/maradur/esp32s3_marauder"
+}
