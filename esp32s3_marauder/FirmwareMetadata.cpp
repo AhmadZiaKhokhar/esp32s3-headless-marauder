@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/FirmwareMetadata.cpp"
 #include "FirmwareMetadata.h"
 
 #ifdef PIO_UNIT_TESTING

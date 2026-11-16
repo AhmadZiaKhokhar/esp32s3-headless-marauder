@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/CsiMotionMonitor.cpp"
 #include "CsiMotionMonitor.h"
 
 #if defined(HAS_CSI_MOTION)

@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/CommandLine.cpp"
 #include "CommandLine.h"
 
 // GCOVR_EXCL_START -- serial protocol output depends on Arduino Serial.

@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/settings.cpp"
 #include "settings.h"
 
 static JsonObject findSavedWifiSetting(DynamicJsonDocument& json) {

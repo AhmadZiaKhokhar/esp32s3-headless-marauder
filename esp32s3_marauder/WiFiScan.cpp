@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/WiFiScan.cpp"
 #include "esp_random.h"
 #include "WiFiScan.h"
 #ifdef HAS_FACES_KEYBOARD

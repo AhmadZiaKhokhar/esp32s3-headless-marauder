@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/PoomFont.h"
 // Original Adafruit_GFX 5x7 font
 
 #ifndef FONT5X7_H

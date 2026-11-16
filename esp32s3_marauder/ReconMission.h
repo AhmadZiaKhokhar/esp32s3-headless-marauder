@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/ReconMission.h"
 #pragma once
 
 #ifndef ReconMission_h

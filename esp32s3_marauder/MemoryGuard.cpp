@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/MemoryGuard.cpp"
 #include "MemoryGuard.h"
 
 #ifdef ARDUINO

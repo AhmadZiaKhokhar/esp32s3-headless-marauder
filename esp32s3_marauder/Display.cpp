@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/Display.cpp"
 #include "Display.h"
 #include "BootSplashBitmap.h"
 #include "DisplayLine.h"
