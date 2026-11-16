@@ -1,0 +1,5 @@
+62d0d72df9ad9c9f07a6326e12f26ddbb3b33cabacc4c9ce16edae538e2f0a76  ./esp32s3_marauder.ino.bin
+e190c1910d7d363d98267dfbac599b4c408786dcff1cd0ea77d16d919fd8e038  ./esp32s3_marauder.ino.bootloader.bin
+7a12042a8136fdc08ccd95bda2ca6b193d654a1ff1e8b8dd4930314c87d11212  ./esp32s3_marauder.ino.elf
+45b30eaba251b2604fbef3a3c821d41b5d3cb4a4ce88edf45ba81c40c21ed850  ./esp32s3_marauder.ino.map
+bd0f7954aca2ef7d925ee21aaa1f3dc8822d1d6ce5cbbd26a135e5886bfff6ce  ./esp32s3_marauder.ino.partitions.bin
