@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/stickcLED.cpp"
 #include "stickcLED.h"
 // NB M5Stick C Plus LED is active low, so digitalWrite() calls are inverted
 

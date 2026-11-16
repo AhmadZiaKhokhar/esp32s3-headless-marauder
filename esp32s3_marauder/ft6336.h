@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/ft6336.h"
 #pragma once
 #ifndef ft6336_h
 #define ft6336_h

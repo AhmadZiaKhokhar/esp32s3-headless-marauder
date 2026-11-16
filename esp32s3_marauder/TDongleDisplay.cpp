@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/TDongleDisplay.cpp"
 #include "TDongleDisplay.h"
 
 #ifdef HAS_T_DONGLE_DISPLAY

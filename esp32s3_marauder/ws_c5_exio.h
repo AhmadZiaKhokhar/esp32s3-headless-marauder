@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/ws_c5_exio.h"
 // SPDX-License-Identifier: MIT
 // Board helper for the Waveshare ESP32-C5-Touch-LCD-3.5 I/O expander (0x24).
 // The expander owns LCD reset, touch reset and backlight PWM. Register map and

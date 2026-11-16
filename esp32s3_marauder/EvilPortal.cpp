@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/EvilPortal.cpp"
 #include "EvilPortal.h"
 
 char apName[MAX_AP_NAME_SIZE] = "PORTAL";

@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/AXP192.h"
 #pragma once
 
 #ifndef __AXP192_H__

@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/Keyboard_def.h"
 #ifndef M5CARDPUTER_KB_KEYS_DEF_H
 #define M5CARDPUTER_KB_KEYS_DEF_H
 

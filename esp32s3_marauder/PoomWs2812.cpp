@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/PoomWs2812.cpp"
 #include "PoomWs2812.h"
 
 #ifdef MARAUDER_POOM

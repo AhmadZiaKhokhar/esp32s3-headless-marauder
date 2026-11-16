@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/RemoteIdModel.h"
 #pragma once
 
 #include <stddef.h>

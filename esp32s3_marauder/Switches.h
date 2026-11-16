@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/Switches.h"
 #ifndef Switches_h
 #define Switches_h
 

@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/AXP192.cpp"
 #include "AXP192.h"
 
 #ifdef MARAUDER_M5STACK_CORE2_AWS

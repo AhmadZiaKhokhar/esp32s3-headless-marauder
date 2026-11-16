@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/LedInterface.cpp"
 #include "LedInterface.h"
 #ifdef HAS_T_DONGLE_LED
   #include "TDongleBus.h"

@@ -1,3 +1,4 @@
+#line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/PoomWs2812.h"
 #pragma once
 
 #ifdef MARAUDER_POOM
