@@ -36,8 +36,11 @@ ESP32Time rtc; // offset in seconds GMT+7
   #include "SDInterface.h"
 #endif
 #include "Buffer.h"
+#ifdef HAS_ONBOARD_WS2812
+#include "OnboardWs2812LED.h"
+#endif
 
-#ifdef MARAUDER_FLIPPER
+#if defined(MARAUDER_FLIPPER) || defined(HAS_FLIPPER_LED)
   #include "flipperLED.h"
 #elif defined(XIAO_ESP32_S3)
   #include "xiaoLED.h"
@@ -121,6 +124,10 @@ SDInterface sd_obj;
   #ifdef HAS_NEOPIXEL_LED
   LedInterface led_obj;
   #endif
+#endif
+
+#ifdef HAS_ONBOARD_WS2812
+OnboardWs2812LED onboard_ws2812_led;
 #endif
 
 const String PROGMEM version_number = MARAUDER_VERSION;
@@ -301,8 +308,12 @@ void setup()
     battery_obj.battery_level = battery_obj.getBatteryLevel();
   #endif
 
+  #ifdef HAS_ONBOARD_WS2812
+    onboard_ws2812_led.begin();
+  #endif
+
   // Do some LED stuff
-  #ifdef MARAUDER_FLIPPER
+  #if defined(MARAUDER_FLIPPER) || defined(HAS_FLIPPER_LED)
     flipper_led.RunSetup();
   #elif defined(XIAO_ESP32_S3)
     xiao_led.RunSetup();
@@ -398,7 +409,7 @@ void loop()
     #endif
     //cli_obj.main(currentTime);
   }
-  #ifdef MARAUDER_FLIPPER
+  #if defined(MARAUDER_FLIPPER) || defined(HAS_FLIPPER_LED)
     flipper_led.main();
   #elif defined(XIAO_ESP32_S3)
     xiao_led.main();
@@ -422,7 +433,7 @@ void loop()
       menu_function_obj.main(currentTime);
     #endif
 
-    #ifdef MARAUDER_FLIPPER
+    #if defined(MARAUDER_FLIPPER) || defined(HAS_FLIPPER_LED)
       flipper_led.main();
     #elif defined(XIAO_ESP32_S3)
       xiao_led.main();

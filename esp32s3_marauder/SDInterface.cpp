@@ -212,14 +212,12 @@ bool SDInterface::initSD() {
 }
 
 File SDInterface::getFile(String path) {
-  if (this->supported) {
-    File file = SD.open(path, FILE_READ);
+  if (!this->supported)
+    return File();
 
-    //if (file)
-    return file;
-  }
+  File file = SD.open(path, FILE_READ);
+  return file;
 }
-
 bool SDInterface::removeFile(String file_path) {
   if (SD.remove(file_path))
     return true;
@@ -312,31 +310,31 @@ bool SDInterface::migrateSPIFFS(uint8_t operation, size_t& files_copied, size_t&
 // GCOVR_EXCL_STOP
 
 void SDInterface::listDirToLinkedList(LinkedList<String>* file_names, String str_dir, String ext) {
-  if (this->supported) {
-    File dir = SD.open(str_dir);
-    while (true)
-    {
-      File entry = dir.openNextFile();
-      if (!entry)
-      {
-        break;
-      }
+  if (!this->supported || file_names == nullptr)
+    return;
 
-      if (entry.isDirectory())
-        continue;
+  File dir = SD.open(str_dir);
+  if (!dir || !dir.isDirectory()) {
+    dir.close();
+    return;
+  }
 
+  while (true) {
+    File entry = dir.openNextFile();
+    if (!entry)
+      break;
+
+    if (!entry.isDirectory()) {
       String file_name = entry.name();
-      if (ext != "") {
-        if (file_name.endsWith(ext)) {
-          file_names->add(file_name);
-        }
-      }
-      else
+      if (ext == "" || file_name.endsWith(ext))
         file_names->add(file_name);
     }
-  }
-}
 
+    entry.close();
+  }
+
+  dir.close();
+}
 bool SDInterface::listDirectory(String path, LinkedList<SDDirectoryEntry>* entries) {
   if (!this->supported || entries == nullptr)
     return false;
@@ -365,25 +363,28 @@ bool SDInterface::listDirectory(String path, LinkedList<SDDirectoryEntry>* entri
 }
 
 void SDInterface::listDir(String str_dir){
-  if (this->supported) {
-    File dir = SD.open(str_dir);
-    while (true)
-    {
-      File entry = dir.openNextFile();
-      if (! entry)
-      {
-        break;
-      }
-      //for (uint8_t i = 0; i < numTabs; i++)
-      //{
-      //  Serial.print('\t');
-      //}
-      Serial.print(entry.name());
-      Serial.print("\t");
-      Serial.println(entry.size());
-      entry.close();
-    }
+  if (!this->supported)
+    return;
+
+  File dir = SD.open(str_dir);
+  if (!dir || !dir.isDirectory()) {
+    dir.close();
+    return;
   }
+
+  while (true)
+  {
+    File entry = dir.openNextFile();
+    if (!entry)
+      break;
+
+    Serial.print(entry.name());
+    Serial.print("\t");
+    Serial.println(entry.size());
+    entry.close();
+  }
+
+  dir.close();
 }
 
 void SDInterface::runUpdate(String file_name) {

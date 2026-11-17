@@ -29,7 +29,7 @@ class Buffer {
     String getFileName();
     void setDirectory(const char* path);
   private:
-    void createFile(const char* name, bool is_pcap, bool is_gpx = false);
+    bool createFile(const char* name, bool is_pcap, bool is_gpx = false);
     void open(bool is_pcap);
     void openFile(const char* file_name, fs::FS* fs, bool serial, bool is_pcap, bool is_gpx = false);
     void add(const uint8_t* buf, uint32_t len, bool is_pcap);
@@ -38,7 +38,7 @@ class Buffer {
     void write(uint16_t n);
     void write(const uint8_t* buf, uint32_t len);
     bool writeUnlocked(const uint8_t* buf, uint32_t len);
-    void saveFs();
+    bool saveFs();
     void saveSerial();
 
     uint8_t* bufA;
@@ -46,6 +46,10 @@ class Buffer {
 
     uint32_t bufSizeA = 0;
     uint32_t bufSizeB = 0;
+
+    // Successfully appended bytes retained across write retries.
+    uint32_t savedA = 0;
+    uint32_t savedB = 0;
 
     bool writing = false; // acceppting writes to buffer
     bool useA = true; // writing to bufA or bufB

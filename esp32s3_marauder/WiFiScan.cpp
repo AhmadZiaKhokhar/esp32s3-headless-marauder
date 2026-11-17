@@ -1,6 +1,9 @@
 #line 1 "/mnt/local-ai/Projects/maradur/esp32s3_marauder/WiFiScan.cpp"
 #include "esp_random.h"
 #include "WiFiScan.h"
+#ifdef HAS_ONBOARD_WS2812
+#include "OnboardWs2812LED.h"
+#endif
 #ifdef HAS_FACES_KEYBOARD
   #include "Keyboard.h"
 #endif
@@ -2994,6 +2997,9 @@ void WiFiScan::setLEDMode(int mode) {
     #elif defined(HAS_NEOPIXEL_LED) || defined(HAS_T_DONGLE_LED)
       led_obj.setMode(MODE_ATTACK);
     #endif
+    #ifdef HAS_ONBOARD_WS2812
+      onboard_ws2812_led.attack();
+    #endif
   } else if (mode == MODE_SNIFF) {
     #ifdef HAS_FLIPPER_LED
       flipper_led.sniffLED();
@@ -3004,6 +3010,9 @@ void WiFiScan::setLEDMode(int mode) {
     #elif defined(HAS_NEOPIXEL_LED) || defined(HAS_T_DONGLE_LED)
       led_obj.setMode(MODE_SNIFF);
     #endif
+    #ifdef HAS_ONBOARD_WS2812
+      onboard_ws2812_led.sniff();
+    #endif
   } else if (mode == MODE_OFF) {
     #ifdef HAS_FLIPPER_LED
       flipper_led.offLED();
@@ -3013,6 +3022,9 @@ void WiFiScan::setLEDMode(int mode) {
       stickc_led.offLED();
     #elif defined(HAS_NEOPIXEL_LED) || defined(HAS_T_DONGLE_LED)
       led_obj.setMode(MODE_OFF);
+    #endif
+    #ifdef HAS_ONBOARD_WS2812
+      onboard_ws2812_led.off();
     #endif
   }
 }
