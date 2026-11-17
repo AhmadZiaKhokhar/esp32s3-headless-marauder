@@ -363,25 +363,28 @@ bool SDInterface::listDirectory(String path, LinkedList<SDDirectoryEntry>* entri
 }
 
 void SDInterface::listDir(String str_dir){
-  if (this->supported) {
-    File dir = SD.open(str_dir);
-    while (true)
-    {
-      File entry = dir.openNextFile();
-      if (! entry)
-      {
-        break;
-      }
-      //for (uint8_t i = 0; i < numTabs; i++)
-      //{
-      //  Serial.print('\t');
-      //}
-      Serial.print(entry.name());
-      Serial.print("\t");
-      Serial.println(entry.size());
-      entry.close();
-    }
+  if (!this->supported)
+    return;
+
+  File dir = SD.open(str_dir);
+  if (!dir || !dir.isDirectory()) {
+    dir.close();
+    return;
   }
+
+  while (true)
+  {
+    File entry = dir.openNextFile();
+    if (!entry)
+      break;
+
+    Serial.print(entry.name());
+    Serial.print("\t");
+    Serial.println(entry.size());
+    entry.close();
+  }
+
+  dir.close();
 }
 
 void SDInterface::runUpdate(String file_name) {
