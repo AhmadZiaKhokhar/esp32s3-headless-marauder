@@ -4341,31 +4341,60 @@ void WiFiScan::RunLoadSSIDList() {
 void WiFiScan::RunSaveSSIDList(bool save_as) {
   #ifdef HAS_SD
     if (save_as) {
-      sd_obj.removeFile(F("/SSIDs_0.log"));
+      const char* ssid_path = "/SSIDs_0.log";
+      sd_obj.removeFile(ssid_path);
 
-      this->startLog("SSIDs");
+      // Write this small list directly instead of routing it through the
+      // shared packet/log buffer. A failed Buffer::createFile() disables
+      // buffer output and previously left an empty file without reporting
+      // the actual write result.
+      File ssid_file = SD.open(ssid_path, FILE_WRITE);
+      size_t expected_bytes = 0;
+      size_t written_bytes = 0;
+      bool save_ok = static_cast<bool>(ssid_file);
 
-      for (int i = 0; i < ssids->size(); i++) {
-        String targ_essid = ssids->get(i).essid;
+      if (save_ok) {
+        for (int i = 0; i < ssids->size(); i++) {
+          const String& essid = ssids->get(i).essid;
+          const size_t line_bytes = essid.length() + ((i < ssids->size() - 1) ? 1 : 0);
+          expected_bytes += line_bytes;
 
-        if (i < ssids->size() - 1)
-          buffer_obj.append(targ_essid + "\n");
-        else
-          buffer_obj.append(targ_essid);
+          if (line_bytes > 0) {
+            written_bytes += ssid_file.write(
+              reinterpret_cast<const uint8_t*>(essid.c_str()), essid.length()
+            );
+            if (i < ssids->size() - 1)
+              written_bytes += ssid_file.write(static_cast<uint8_t>('\n'));
+          }
+          if (written_bytes != expected_bytes) {
+            save_ok = false;
+            break;
+          }
+        }
+
+        ssid_file.flush();
+        if (written_bytes != expected_bytes || ssid_file.size() != expected_bytes)
+          save_ok = false;
+        ssid_file.close();
       }
 
-      #ifdef HAS_SCREEN
-        display_obj.tft.setTextWrap(false);
-        display_obj.tft.setFreeFont(NULL);
-        display_obj.tft.setCursor(0, 100);
-        display_obj.tft.setTextSize(1);
-        display_obj.tft.setTextColor(TFT_CYAN);
-      
-        display_obj.tft.print(F("Saved SSIDs: "));
-        display_obj.tft.println((String)ssids->size());
-      #endif
-      Serial.print(F("Saved SSIDs: "));
-      Serial.println((String)ssids->size());
+      if (!save_ok) {
+        if (ssid_file)
+          ssid_file.close();
+        Serial.println(F("Failed to save SSID list to SD card"));
+      } else {
+        #ifdef HAS_SCREEN
+          display_obj.tft.setTextWrap(false);
+          display_obj.tft.setFreeFont(NULL);
+          display_obj.tft.setCursor(0, 100);
+          display_obj.tft.setTextSize(1);
+          display_obj.tft.setTextColor(TFT_CYAN);
+          display_obj.tft.print(F("Saved SSIDs: "));
+          display_obj.tft.println((String)ssids->size());
+        #endif
+        Serial.print(F("Saved SSIDs: "));
+        Serial.println((String)ssids->size());
+      }
     }
   #endif
 }
