@@ -4351,7 +4351,6 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
       size_t expected_bytes = 0;
       size_t written_bytes = 0;
       bool save_ok = static_cast<bool>(ssid_file);
-      size_t size_before_close = 0;
 
       if (save_ok) {
         for (size_t i = 0; i < ssid_count; i++) {
@@ -4374,7 +4373,6 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
         }
 
         ssid_file.flush();
-        size_before_close = ssid_file.size();
         ssid_file.close();
 
         File verify_file = SD.open(ssid_path, FILE_READ);
@@ -4383,21 +4381,8 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
         if (verify_open)
           verify_file.close();
 
-        Serial.print(F("SSID save debug: count="));
-        Serial.print((unsigned int)ssid_count);
-        Serial.print(F(" expected="));
-        Serial.print((unsigned int)expected_bytes);
-        Serial.print(F(" written="));
-        Serial.print((unsigned int)written_bytes);
-        Serial.print(F(" size_before_close="));
-        Serial.print((unsigned int)size_before_close);
-        Serial.print(F(" size_after_reopen="));
-        Serial.println((unsigned int)verified_bytes);
-
         if (!verify_open || written_bytes != expected_bytes || verified_bytes != expected_bytes)
           save_ok = false;
-      } else {
-        Serial.println(F("SSID save debug: file open failed"));
       }
 
       if (!save_ok) {
