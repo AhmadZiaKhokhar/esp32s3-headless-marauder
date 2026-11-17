@@ -363,15 +363,22 @@ bool SDInterface::listDirectory(String path, LinkedList<SDDirectoryEntry>* entri
 }
 
 void SDInterface::listDir(String str_dir){
-  if (!this->supported)
-    return;
-
-  File dir = SD.open(str_dir);
-  if (!dir || !dir.isDirectory()) {
-    dir.close();
+  if (!this->supported) {
+    Serial.println(F("SD Card not supported"));
     return;
   }
 
+  File dir = SD.open(str_dir);
+  if (!dir) {
+    Serial.print(F("Failed to open directory: "));
+    Serial.println(str_dir);
+    return;
+  }
+
+  // Do not reject the handle based on isDirectory(). Some ESP32 SD
+  // filesystem implementations can return a valid root handle while
+  // reporting directory metadata inconsistently. Preserve the original
+  // openNextFile() listing behavior and always close every handle.
   while (true)
   {
     File entry = dir.openNextFile();
