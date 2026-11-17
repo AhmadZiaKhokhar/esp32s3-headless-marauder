@@ -4344,28 +4344,29 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
       const char* ssid_path = "/SSIDs_0.log";
       sd_obj.removeFile(ssid_path);
 
-      // Write this small list directly instead of routing it through the
-      // shared packet/log buffer. A failed Buffer::createFile() disables
-      // buffer output and previously left an empty file without reporting
-      // the actual write result.
+      // Write the SSID list directly, then verify it after closing and
+      // reopening the file so the size check observes committed data.
       File ssid_file = SD.open(ssid_path, FILE_WRITE);
+      const size_t ssid_count = ssids->size();
       size_t expected_bytes = 0;
       size_t written_bytes = 0;
       bool save_ok = static_cast<bool>(ssid_file);
+      size_t size_before_close = 0;
 
       if (save_ok) {
-        for (int i = 0; i < ssids->size(); i++) {
+        for (size_t i = 0; i < ssid_count; i++) {
           String essid = ssids->get(i).essid;
-          const size_t line_bytes = essid.length() + ((i < ssids->size() - 1) ? 1 : 0);
+          const size_t line_bytes = essid.length() + ((i < ssid_count - 1) ? 1 : 0);
           expected_bytes += line_bytes;
 
-          if (line_bytes > 0) {
+          if (essid.length() > 0) {
             written_bytes += ssid_file.write(
               reinterpret_cast<const uint8_t*>(essid.c_str()), essid.length()
             );
-            if (i < ssids->size() - 1)
-              written_bytes += ssid_file.write(static_cast<uint8_t>('\n'));
           }
+          if (i < ssid_count - 1)
+            written_bytes += ssid_file.write(static_cast<uint8_t>('\n'));
+
           if (written_bytes != expected_bytes) {
             save_ok = false;
             break;
@@ -4373,14 +4374,33 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
         }
 
         ssid_file.flush();
-        if (written_bytes != expected_bytes || ssid_file.size() != expected_bytes)
-          save_ok = false;
+        size_before_close = ssid_file.size();
         ssid_file.close();
+
+        File verify_file = SD.open(ssid_path, FILE_READ);
+        const bool verify_open = static_cast<bool>(verify_file);
+        const size_t verified_bytes = verify_open ? verify_file.size() : 0;
+        if (verify_open)
+          verify_file.close();
+
+        Serial.print(F("SSID save debug: count="));
+        Serial.print((unsigned int)ssid_count);
+        Serial.print(F(" expected="));
+        Serial.print((unsigned int)expected_bytes);
+        Serial.print(F(" written="));
+        Serial.print((unsigned int)written_bytes);
+        Serial.print(F(" size_before_close="));
+        Serial.print((unsigned int)size_before_close);
+        Serial.print(F(" size_after_reopen="));
+        Serial.println((unsigned int)verified_bytes);
+
+        if (!verify_open || written_bytes != expected_bytes || verified_bytes != expected_bytes)
+          save_ok = false;
+      } else {
+        Serial.println(F("SSID save debug: file open failed"));
       }
 
       if (!save_ok) {
-        if (ssid_file)
-          ssid_file.close();
         Serial.println(F("Failed to save SSID list to SD card"));
       } else {
         #ifdef HAS_SCREEN
@@ -4390,15 +4410,14 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
           display_obj.tft.setTextSize(1);
           display_obj.tft.setTextColor(TFT_CYAN);
           display_obj.tft.print(F("Saved SSIDs: "));
-          display_obj.tft.println((String)ssids->size());
+          display_obj.tft.println((String)ssid_count);
         #endif
         Serial.print(F("Saved SSIDs: "));
-        Serial.println((String)ssids->size());
+        Serial.println((String)ssid_count);
       }
     }
   #endif
 }
-
 void WiFiScan::RunEvilPortal(uint8_t scan_mode, uint16_t color) {
   startLog("evil_portal");
 
