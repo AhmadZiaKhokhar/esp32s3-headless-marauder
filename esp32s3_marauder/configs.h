@@ -517,6 +517,8 @@
   #endif
 
   #ifdef MARAUDER_MULTIBOARD_S3
+    #define HAS_ONBOARD_WS2812
+    #define ONBOARD_WS2812_PIN 48
     #define HAS_FLIPPER_LED
     //#define FLIPPER_ZERO_HAT
     //#define HAS_BATTERY

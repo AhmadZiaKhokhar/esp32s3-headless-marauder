@@ -8,37 +8,41 @@ Buffer::Buffer(){
   bufB = (uint8_t*)malloc(BUF_SIZE);
 }
 
-void Buffer::createFile(const char* name, bool is_pcap, bool is_gpx){
-  int i=0;
+bool Buffer::createFile(const char* name, bool is_pcap, bool is_gpx){
+  int i = 0;
   String prefix = directory ? String(directory) + "/" : "/";
+
   if (is_pcap) {
-    do{
-      fileName = prefix+String(name)+"_"+(String)i+".pcap";
-      i++;
-    } while(fs->exists(fileName));
+    do {
+      fileName = prefix + String(name) + "_" + String(i++) + ".pcap";
+    } while (fs->exists(fileName));
   }
-  else if ((!is_pcap) && (!is_gpx)) {
-    do{
-      fileName = prefix+String(name)+"_"+(String)i+".log";
-      i++;
-    } while(fs->exists(fileName));
+  else if (!is_gpx) {
+    do {
+      fileName = prefix + String(name) + "_" + String(i++) + ".log";
+    } while (fs->exists(fileName));
   }
   else {
-    do{
-      fileName = prefix+String(name)+"_"+(String)i+".gpx";
-      i++;
-    } while(fs->exists(fileName));
+    do {
+      fileName = prefix + String(name) + "_" + String(i++) + ".gpx";
+    } while (fs->exists(fileName));
   }
 
   Serial.println(fileName);
-  
   file = fs->open(fileName, FILE_WRITE);
-  file.close();
-}
 
-void Buffer::open(bool is_pcap){
+  if (!file) {
+    Serial.println("Failed to create file '" + fileName + "'");
+    return false;
+  }
+
+  file.close();
+  return true;
+}void Buffer::open(bool is_pcap){
   bufSizeA = 0;
   bufSizeB = 0;
+  savedA = 0;
+  savedB = 0;
 
   bufSizeB = 0;
 
@@ -61,25 +65,27 @@ void Buffer::setDirectory(const char* path) {
 
 void Buffer::openFile(const char* file_name, fs::FS* fs, bool serial, bool is_pcap, bool is_gpx) {
   bool save_pcap = settings_obj.loadSetting<bool>("SavePCAP");
+
   if (!save_pcap) {
     this->fs = NULL;
     this->serial = false;
     writing = false;
     return;
   }
+
   this->fs = fs;
   this->serial = serial;
-  if (this->fs) {
-    createFile(file_name, is_pcap, is_gpx);
+
+  if (this->fs && !createFile(file_name, is_pcap, is_gpx)) {
+    this->fs = NULL;
   }
+
   if (this->fs || this->serial) {
     open(is_pcap);
   } else {
     writing = false;
   }
-}
-
-void Buffer::pcapOpen(const char* file_name, fs::FS* fs, bool serial) {
+}void Buffer::pcapOpen(const char* file_name, fs::FS* fs, bool serial) {
   openFile(file_name, fs, serial, true);
 }
 
@@ -200,33 +206,54 @@ bool Buffer::writeUnlocked(const uint8_t* buf, uint32_t len){
   return true;
 }
 
-void Buffer::saveFs(){
-  file = fs->open(fileName, FILE_APPEND);
-  if (!file) {
-    Serial.println(text02+fileName+"'");
-    return;
+bool Buffer::saveFs(){
+  if (!fs)
+    return false;
+
+  File output = fs->open(fileName, FILE_APPEND);
+
+  if (!output) {
+    Serial.println("Failed to open file '" + fileName + "' for append");
+    return false;
   }
 
-  if(useA){
-    if(bufSizeB > 0){
-      file.write(bufB, bufSizeB);
-    }
-    if(bufSizeA > 0){
-      file.write(bufA, bufSizeA);
-    }
+  // Resume at the first byte not successfully appended.
+  auto writePending = [&output](const uint8_t* data, uint32_t total, uint32_t& saved) -> bool {
+    if (saved >= total)
+      return true;
+
+    size_t remaining = total - saved;
+    size_t written = output.write(data + saved, remaining);
+    saved += written;
+
+    return saved == total;
+  };
+
+  bool success = true;
+
+  if (useA) {
+    if (!writePending(bufB, bufSizeB, savedB))
+      success = false;
+
+    if (success && !writePending(bufA, bufSizeA, savedA))
+      success = false;
   } else {
-    if(bufSizeA > 0){
-      file.write(bufA, bufSizeA);
-    }
-    if(bufSizeB > 0){
-      file.write(bufB, bufSizeB);
-    }
+    if (!writePending(bufA, bufSizeA, savedA))
+      success = false;
+
+    if (success && !writePending(bufB, bufSizeB, savedB))
+      success = false;
   }
 
-  file.close();
-}
+  if (success) {
+    output.flush();
+  } else {
+    Serial.println("SD write incomplete; captured data retained for retry");
+  }
 
-void Buffer::saveSerial() {
+  output.close();
+  return success;
+}void Buffer::saveSerial() {
   // Saves to main console UART, user-facing app will ignore these markers
   // Uses / and ] in markers as they are illegal characters for SSIDs
   const char* mark_begin = "[BUF/BEGIN]";
@@ -271,19 +298,30 @@ void Buffer::save() {
   portENTER_CRITICAL(&bufferMux);
   saving = true;
 
-  if((bufSizeA + bufSizeB) == 0){
+  if ((bufSizeA + bufSizeB) == 0) {
     saving = false;
     portEXIT_CRITICAL(&bufferMux);
     return;
   }
+
   portEXIT_CRITICAL(&bufferMux);
 
-  if(this->fs) saveFs();
-  if(this->serial) saveSerial();
+  // Do not discard captured data if SD open/write fails.
+  if (this->fs && !saveFs()) {
+    portENTER_CRITICAL(&bufferMux);
+    saving = false;
+    portEXIT_CRITICAL(&bufferMux);
+    return;
+  }
+
+  if (this->serial)
+    saveSerial();
 
   portENTER_CRITICAL(&bufferMux);
   bufSizeA = 0;
   bufSizeB = 0;
+  savedA = 0;
+  savedB = 0;
   saving = false;
   portEXIT_CRITICAL(&bufferMux);
 }
