@@ -4355,7 +4355,7 @@ void WiFiScan::RunSaveSSIDList(bool save_as) {
 
       if (save_ok) {
         for (int i = 0; i < ssids->size(); i++) {
-          const String& essid = ssids->get(i).essid;
+          String essid = ssids->get(i).essid;
           const size_t line_bytes = essid.length() + ((i < ssids->size() - 1) ? 1 : 0);
           expected_bytes += line_bytes;
 
